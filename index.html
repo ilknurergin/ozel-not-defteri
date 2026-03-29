@@ -1,13 +1,13 @@
-   <!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Felicita</title>
+    <title>Mistik Ajanda</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'serif'; background: #000; color: white; overflow-x: hidden; }
         
-        /* GİRİŞ EKRANI */
+        /* GİRİŞ EKRANI - ŞELALE GÖRSELİ */
         #login-screen { 
             position: fixed; width: 100%; height: 100%; 
             background: url('0177b904c247bc8010066256a918128a.jpg') no-repeat center center; 
@@ -16,6 +16,7 @@
             transition: 1s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
+        /* PARMAK İZİ BUTONU */
         .fingerprint-btn { 
             width: 150px; height: 150px; 
             background: url('834a9255f00a5f8afa18cc371ea69afc.jpg') no-repeat center center; 
@@ -30,6 +31,7 @@
         .pin-display { font-size: 40px; color: #00d4ff; margin-bottom: 30px; letter-spacing: 15px; }
         .pin-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; }
         .pin-btn { width: 80px; height: 80px; border-radius: 50%; border: 1px solid #333; background: rgba(255,255,255,0.05); color: white; font-size: 24px; cursor: pointer; }
+        .pin-btn:active { background: #00d4ff; color: #000; }
 
         /* ANA İÇERİK */
         #app-content { display: none; padding: 0; background: #000; min-height: 100vh; }
@@ -38,14 +40,13 @@
         .day-box { width: 100%; border-bottom: 1px solid #111; }
         .day-header { 
             padding: 35px 20px; font-size: 24px; font-weight: bold; cursor: pointer;
-            text-shadow: 2px 2px 8px #000; background: rgba(255,255,255,0.02); 
-            display: flex; justify-content: space-between; transition: 0.3s;
+            text-shadow: 2px 2px 8px #000; background: rgba(0,0,0,0.3); 
+            display: flex; justify-content: space-between;
         }
-        .day-header:hover { background: rgba(0,212,255,0.05); }
 
         .day-body { display: none; padding: 20px; min-height: 550px; background-size: cover; background-position: center; transition: 0.4s; }
         
-        /* GÜN RESİMLERİ */
+        /* GÜN RESİMLERİ (Senin GitHub isimlerinle birebir eşlendi) */
         .mon { background-image: url('2352ce77641b4da8769d51efff3eb20b.jpg'); }
         .tue { background-image: url('3e23d34ff1d420bbd75592b8f34ccc27.jpg'); }
         .wed { background-image: url('4bdf2e14ce8a8f4762846b8c8e4e092d.jpg'); }
@@ -72,7 +73,7 @@
 <body>
 
 <div id="login-screen">
-    <h1 id="login-title">FELICITA</h1>
+    <h1 id="login-title" style="letter-spacing: 5px;">MİSTİK AJANDA</h1>
     <button class="fingerprint-btn" onclick="showPin()"></button>
     <p id="clock" style="margin-top:25px; font-family:monospace; font-size:22px; color:#00d4ff;"></p>
 </div>
@@ -80,12 +81,12 @@
 <div id="pin-overlay">
     <div class="pin-display" id="pin-dots">----</div>
     <div class="pin-grid" id="numpad"></div>
-    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none; cursor:pointer;">İPTAL</button>
+    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none; cursor:pointer;">VAZGEÇ</button>
 </div>
 
 <div id="app-content">
     <div class="header">
-        <h2 id="app-title">Felicita</h2>
+        <h2 id="app-title">Phantom Harmony</h2>
         <button onclick="toggleSettings()" style="background:none; border:none; font-size:28px; cursor:pointer;">⚙️</button>
     </div>
     <div id="days-list"></div>
@@ -93,14 +94,14 @@
 
 <div id="settings-modal">
     <h3 style="color:#00d4ff">⚙️ Ayarlar</h3>
-    <input type="text" id="set-title" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Başlık Değiştir">
+    <input type="text" id="set-title" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Ajanda Başlığı">
     <input type="number" id="set-pin" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Yeni PIN">
     <button onclick="saveSettings()" class="save-btn">GÜNCELLE</button>
 </div>
 
 <script>
     let correctPin = localStorage.getItem('m-pin') || "1234";
-    let appTitle = localStorage.getItem('m-title') || "Felicita";
+    let appTitle = localStorage.getItem('m-title') || "Phantom Harmony";
     let inputPin = "";
 
     document.getElementById('app-title').innerText = appTitle;
@@ -112,7 +113,9 @@
     function renderPad() {
         const d = document.getElementById('numpad'); d.innerHTML = "";
         for(let i=1; i<=9; i++) d.innerHTML += `<button class="pin-btn" onclick="add('${i}')">${i}</button>`;
-        d.innerHTML += `<button class="pin-btn" onclick="inputPin=''">C</button><button class="pin-btn" onclick="add('0')">0</button><button class="pin-btn" style="color:#00d4ff" onclick="confirm()">OK</button>`;
+        d.innerHTML += `<button class="pin-btn" onclick="inputPin=''">C</button>`;
+        d.innerHTML += `<button class="pin-btn" onclick="add('0')">0</button>`;
+        d.innerHTML += `<button class="pin-btn" style="color:#00d4ff" onclick="confirm()">OK</button>`;
     }
 
     function add(n) { if(inputPin.length < 4) { inputPin += n; document.getElementById('pin-dots').innerText = "*".repeat(inputPin.length); } }
@@ -126,6 +129,7 @@
     }
 
     function toggleSettings() { const s = document.getElementById('settings-modal'); s.style.display = (s.style.display === 'block') ? 'none' : 'block'; }
+    
     function saveSettings() {
         const t = document.getElementById('set-title').value;
         const p = document.getElementById('set-pin').value;
@@ -146,43 +150,27 @@
             <div class="day-box">
                 <div class="day-header" onclick="toggleD('${g.id}')"><span>${g.n}</span> <span>✦</span></div>
                 <div id="${g.id}" class="day-body ${g.c}">
-                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını mühürle..."></textarea>
-                    <button class="save-btn" onclick="saveData('${g.id}')">NOTU & KONUMU MÜHÜRLE</button>
+                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını buraya mühürle..."></textarea>
+                    <button class="save-btn" onclick="saveData('${g.id}')">BU GÜNÜ MÜHÜRLE</button>
                 </div>
             </div>`;
         const old = localStorage.getItem('diary-'+g.id);
         if(old) document.getElementById('txt-'+g.id).value = old;
     });
 
-    // SADECE TIKLANAN GÜNÜN AÇILIP KAPANMASI (SIR SİSTEMİ)
     function toggleD(id) {
-        const el = document.getElementById(id);
-        const isOpen = el.style.display === 'block';
+        const el = document.getElementById(id); const is = el.style.display === 'block';
         document.querySelectorAll('.day-body').forEach(b => b.style.display = 'none');
-        el.style.display = isOpen ? 'none' : 'block';
-        if(!isOpen) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.style.display = is ? 'none' : 'block';
     }
 
-    // AKILLI LOKASYON MÜHÜRLEME
-    async function saveData(id) {
+    function saveData(id) {
         const val = document.getElementById('txt-'+id).value;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-                    const data = await res.json();
-                    const city = data.address.city || data.address.town || "Gizli Bölge";
-                    const final = val + `\n\n📍 ${city} | ⏰ ${new Date().toLocaleTimeString('tr-TR')}`;
-                    localStorage.setItem('diary-'+id, final);
-                    document.getElementById('txt-'+id).value = final;
-                    alert("Notun ve konumun (" + city + ") mühürlendi! ✨");
-                } catch (e) { localStorage.setItem('diary-'+id, val); alert("Mühürlendi."); }
-            }, () => { localStorage.setItem('diary-'+id, val); alert("Mühürlendi."); });
-        }
+        localStorage.setItem('diary-'+id, val);
+        alert("Notun zaman tüneline mühürlendi.");
     }
 
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR'); }, 1000);
 </script>
 </body>
-</html>
- 
+</html>   
