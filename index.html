@@ -3,244 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistik Ajanda - Ritim Serisi</title>
+    <title>Mistik Ajanda</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'serif'; background: #000; color: white; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'serif'; background: #000; color: white; overflow-x: hidden; }
         
-        /* CANLI RİTİM: GİRİŞ EKRANI */
+        /* GİRİŞ EKRANI - ŞELALE GÖRSELİ */
         #login-screen { 
             position: fixed; width: 100%; height: 100%; 
-            background: url('1000093933.jpg') no-repeat center center; 
+            background: url('0177b904c247bc8010066256a918128a.jpg') no-repeat center center; 
             background-size: cover; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; z-index: 1000; 
-            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1); 
+            transition: 1s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
-        /* NEFES ALAN BUTON */
+        /* PARMAK İZİ BUTONU */
         .fingerprint-btn { 
-            width: 140px; height: 140px; 
-            background: url('1000093911.jpg') no-repeat center center; 
+            width: 150px; height: 150px; 
+            background: url('834a9255f00a5f8afa18cc371ea69afc.jpg') no-repeat center center; 
             background-size: contain; border: none; cursor: pointer; 
-            border-radius: 50%; box-shadow: 0 0 30px #00d4ff; 
-            animation: rhythm-pulse 3s infinite ease-in-out; 
+            border-radius: 50%; box-shadow: 0 0 40px #00d4ff; 
+            animation: breathe 3s infinite ease-in-out; 
         }
 
-        @keyframes rhythm-pulse {
-            0% { transform: scale(1); filter: brightness(1); box-shadow: 0 0 20px #00d4ff; }
-            50% { transform: scale(1.12); filter: brightness(1.4); box-shadow: 0 0 50px #00d4ff; }
-            100% { transform: scale(1); filter: brightness(1); box-shadow: 0 0 20px #00d4ff; }
-        }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         
-        /* PIN PANELİ RİTMİ */
-        #pin-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.94); display: none; flex-direction: column; 
-            justify-content: center; align-items: center; z-index: 1100; 
-            backdrop-filter: blur(25px); 
-        }
-
-        .pin-display { font-size: 42px; color: #00d4ff; margin-bottom: 30px; letter-spacing: 15px; text-shadow: 0 0 20px #00d4ff; font-family: monospace; }
+        #pin-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1100; backdrop-filter: blur(20px); }
+        .pin-display { font-size: 40px; color: #00d4ff; margin-bottom: 30px; letter-spacing: 15px; }
         .pin-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; }
-        .pin-btn { 
-            width: 80px; height: 80px; border-radius: 50%; 
-            border: 1px solid rgba(0,212,255,0.2); background: rgba(255,255,255,0.02); 
-            color: white; font-size: 24px; cursor: pointer; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .pin-btn:active { background: #00d4ff; color: #000; transform: scale(0.85); box-shadow: 0 0 20px #00d4ff; }
-        
-        /* ANA İÇERİK AKIŞI */
-        #app-content { display: none; padding: 20px; height: 100vh; overflow-y: auto; background: linear-gradient(180deg, #0a0a0a 0%, #000 100%); }
-        .app-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px;
-        }
+        .pin-btn { width: 80px; height: 80px; border-radius: 50%; border: 1px solid #333; background: rgba(255,255,255,0.05); color: white; font-size: 24px; cursor: pointer; }
+        .pin-btn:active { background: #00d4ff; color: #000; }
 
-        .day-container { margin-bottom: 15px; border-radius: 18px; overflow: hidden; border: 1px solid #151515; }
+        /* ANA İÇERİK */
+        #app-content { display: none; padding: 0; background: #000; min-height: 100vh; }
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.85); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1a1a; }
+        
+        .day-box { width: 100%; border-bottom: 1px solid #111; }
         .day-header { 
-            padding: 20px; background: rgba(18,18,18,0.95); cursor: pointer; 
-            display: flex; justify-content: space-between; font-weight: bold; font-size: 19px;
-            transition: background 0.3s;
+            padding: 35px 20px; font-size: 24px; font-weight: bold; cursor: pointer;
+            text-shadow: 2px 2px 8px #000; background: rgba(0,0,0,0.3); 
+            display: flex; justify-content: space-between;
         }
-        .day-header:active { background: #222; }
 
-        .day-content { display: none; padding: 20px; min-height: 480px; background-size: cover; background-position: center; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .day-body { display: none; padding: 20px; min-height: 550px; background-size: cover; background-position: center; transition: 0.4s; }
         
-        /* GÜN RESİMLERİ */
-        .pazartesi { background-image: url('1000093927.jpg'); }
-        .sali { background-image: url('1000093922.jpg'); }
-        .carsamba { background-image: url('1000093921.jpg'); }
-        .persembe { background-image: url('1000093920.jpg'); }
-        .cuma { background-image: url('1000093919.jpg'); }
-        .cumartesi { background-image: url('1000093918.jpg'); }
-        .pazar { background-image: url('1000093916.jpg'); }
+        /* GÜN RESİMLERİ (Senin GitHub isimlerinle birebir eşlendi) */
+        .mon { background-image: url('2352ce77641b4da8769d51efff3eb20b.jpg'); }
+        .tue { background-image: url('3e23d34ff1d420bbd75592b8f34ccc27.jpg'); }
+        .wed { background-image: url('4bdf2e14ce8a8f4762846b8c8e4e092d.jpg'); }
+        .thu { background-image: url('8c5f169f0a238e343023d5e81fda4033.jpg'); }
+        .fri { background-image: url('ae46bebae07e389824249334233b4c7.jpg'); }
+        .sat { background-image: url('fedce3e05611fae9c24bc6e90411b05d.jpg'); }
+        .sun { background-image: url('0177b904c247bc8010066256a918128a.jpg'); }
 
         textarea { 
-            width: 100%; height: 240px; background: rgba(0,0,0,0.8); color: #efefef; 
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 15px; padding: 18px; 
-            box-sizing: border-box; resize: none; font-size: 16px; line-height: 1.6;
+            width: 100%; height: 350px; background: rgba(0,0,0,0.85); color: #fff; 
+            border: 2px solid #00d4ff; border-radius: 15px; padding: 20px; 
+            font-size: 18px; box-sizing: border-box; resize: none;
         }
-
-        .mood-selector { margin: 15px 0; display: flex; gap: 15px; justify-content: center; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 30px; }
-        .mood-btn { font-size: 26px; cursor: pointer; opacity: 0.3; transition: 0.4s; filter: grayscale(1); }
-        .mood-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.4); text-shadow: 0 0 10px gold; }
 
         .save-btn { 
-            background: linear-gradient(135deg, #1db954 0%, #1ed760 100%); color: white; border: none; 
-            padding: 16px; border-radius: 12px; width: 100%; font-weight: bold; margin-top: 15px; 
-            letter-spacing: 1px; box-shadow: 0 5px 20px rgba(29, 185, 84, 0.4); cursor: pointer;
+            background: linear-gradient(135deg, #00d4ff 0%, #008fb3 100%); color: #000; 
+            border: none; padding: 18px; border-radius: 12px; width: 100%; 
+            font-weight: bold; font-size: 18px; margin-top: 15px; cursor: pointer;
         }
 
-        /* AYARLAR RİTMİ */
-        #settings-modal { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 90%; background: #111; padding: 30px; border-radius: 25px; 
-            display: none; z-index: 2000; border: 1px solid #333; box-shadow: 0 0 60px rgba(0,0,0,1);
-        }
-        .settings-input { 
-            width: 100%; padding: 14px; margin: 15px 0; background: #050505; 
-            border: 1px solid #444; color: white; border-radius: 10px; box-sizing: border-box;
-        }
+        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; background: #111; padding: 30px; border-radius: 20px; display: none; z-index: 2000; border: 1px solid #00d4ff; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <h2 id="login-title" style="letter-spacing: 3px;">ERİŞİM KONTROLÜ</h2>
-    <button class="fingerprint-btn" onclick="showPinPad()"></button>
-    <p id="clock-login" style="margin-top: 30px; font-family: 'Courier New', monospace; font-size: 20px; color: #00d4ff;"></p>
+    <h1 id="login-title" style="letter-spacing: 5px;">MİSTİK AJANDA</h1>
+    <button class="fingerprint-btn" onclick="showPin()"></button>
+    <p id="clock" style="margin-top:25px; font-family:monospace; font-size:22px; color:#00d4ff;"></p>
 </div>
 
 <div id="pin-overlay">
     <div class="pin-display" id="pin-dots">----</div>
     <div class="pin-grid" id="numpad"></div>
-    <button onclick="hidePinPad()" style="color:#555; background:none; border:none; margin-top:40px; font-size:16px; cursor:pointer;">VAZGEÇ</button>
+    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none; cursor:pointer;">VAZGEÇ</button>
 </div>
 
 <div id="app-content">
-    <div class="app-header">
-        <h3 id="app-title" style="margin:0; font-style: italic; color: #00d4ff;">Mistik Ajanda</h3>
-        <button onclick="toggleSettings()" style="background:none; border:none; font-size:26px; cursor:pointer; color:white;">⚙️</button>
+    <div class="header">
+        <h2 id="app-title">Phantom Harmony</h2>
+        <button onclick="toggleSettings()" style="background:none; border:none; font-size:28px; cursor:pointer;">⚙️</button>
     </div>
     <div id="days-list"></div>
 </div>
 
 <div id="settings-modal">
-    <h3 style="margin-top:0; color: #00d4ff;">⚙️ Ayarlar</h3>
-    <label style="font-size:14px; color:#666;">Defter Başlığı:</label>
-    <input type="text" id="set-app-name" class="settings-input">
-    <label style="font-size:14px; color:#666;">Erişim PIN (4 Hane):</label>
-    <input type="number" id="set-app-pin" class="settings-input">
-    <button onclick="saveSettings()" class="save-btn">AYARLARI UYGULA</button>
-    <button onclick="toggleSettings()" style="background:none; border:none; color:#ff4d4d; width:100%; margin-top:20px; font-weight:bold; cursor:pointer;">GERİ DÖN</button>
+    <h3 style="color:#00d4ff">⚙️ Ayarlar</h3>
+    <input type="text" id="set-title" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Ajanda Başlığı">
+    <input type="number" id="set-pin" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Yeni PIN">
+    <button onclick="saveSettings()" class="save-btn">GÜNCELLE</button>
 </div>
 
 <script>
-    let correctPin = localStorage.getItem('app-pin') || "1234";
-    let appName = localStorage.getItem('app-name') || "Mistik Ajanda";
-    let currentInputPin = "";
-    let selectedMood = "😊";
+    let correctPin = localStorage.getItem('m-pin') || "1234";
+    let appTitle = localStorage.getItem('m-title') || "Phantom Harmony";
+    let inputPin = "";
 
-    document.getElementById('app-title').innerText = appName;
-    document.getElementById('login-title').innerText = appName.toUpperCase();
-    document.getElementById('set-app-name').value = appName;
+    document.getElementById('app-title').innerText = appTitle;
+    document.getElementById('login-title').innerText = appTitle.toUpperCase();
 
-    function showPinPad() { document.getElementById('pin-overlay').style.display = 'flex'; renderNumPad(); }
-    function hidePinPad() { document.getElementById('pin-overlay').style.display = 'none'; currentInputPin = ""; document.getElementById('pin-dots').innerText = "----"; }
+    function showPin() { document.getElementById('pin-overlay').style.display = 'flex'; renderPad(); }
+    function hidePin() { document.getElementById('pin-overlay').style.display = 'none'; inputPin = ""; document.getElementById('pin-dots').innerText = "----"; }
 
-    function renderNumPad() {
-        const pad = document.getElementById('numpad'); pad.innerHTML = "";
-        for (let i = 1; i <= 9; i++) pad.innerHTML += `<button class="pin-btn" onclick="pressKey('${i}')">${i}</button>`;
-        pad.innerHTML += `<button class="pin-btn" style="color:#ff4d4d" onclick="currentInputPin=''; document.getElementById('pin-dots').innerText='----'">C</button>`;
-        pad.innerHTML += `<button class="pin-btn" onclick="pressKey('0')">0</button>`;
-        pad.innerHTML += `<button class="pin-btn" style="color:#1db954" onclick="checkPin()">OK</button>`;
+    function renderPad() {
+        const d = document.getElementById('numpad'); d.innerHTML = "";
+        for(let i=1; i<=9; i++) d.innerHTML += `<button class="pin-btn" onclick="add('${i}')">${i}</button>`;
+        d.innerHTML += `<button class="pin-btn" onclick="inputPin=''">C</button>`;
+        d.innerHTML += `<button class="pin-btn" onclick="add('0')">0</button>`;
+        d.innerHTML += `<button class="pin-btn" style="color:#00d4ff" onclick="confirm()">OK</button>`;
     }
 
-    function pressKey(k) { 
-        if(currentInputPin.length < 4) { 
-            currentInputPin += k; 
-            document.getElementById('pin-dots').innerText = "*".repeat(currentInputPin.length) + "-".repeat(4 - currentInputPin.length); 
-        } 
+    function add(n) { if(inputPin.length < 4) { inputPin += n; document.getElementById('pin-dots').innerText = "*".repeat(inputPin.length); } }
+
+    function confirm() {
+        if(inputPin === correctPin) {
+            document.getElementById('login-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('app-content').style.display = 'block';
+            hidePin();
+        } else { alert("Erişim Reddedildi!"); inputPin = ""; document.getElementById('pin-dots').innerText = "----"; }
     }
 
-    function checkPin() {
-        if(currentInputPin === correctPin) {
-            document.getElementById('pin-overlay').style.display = 'none';
-            document.getElementById('login-screen').style.transform = 'scale(2)';
-            document.getElementById('login-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-content').style.display = 'block';
-            }, 700);
-        } else { 
-            alert("ERİŞİM ENGELLENDİ!"); 
-            currentInputPin = ""; 
-            document.getElementById('pin-dots').innerText = "----"; 
-        }
-    }
-
-    function toggleSettings() { 
-        const m = document.getElementById('settings-modal');
-        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-    }
-
+    function toggleSettings() { const s = document.getElementById('settings-modal'); s.style.display = (s.style.display === 'block') ? 'none' : 'block'; }
+    
     function saveSettings() {
-        const newName = document.getElementById('set-app-name').value;
-        const newPin = document.getElementById('set-app-pin').value;
-        if(newName) localStorage.setItem('app-name', newName);
-        if(newPin && newPin.length === 4) localStorage.setItem('app-pin', newPin);
+        const t = document.getElementById('set-title').value;
+        const p = document.getElementById('set-pin').value;
+        if(t) localStorage.setItem('m-title', t);
+        if(p && p.length === 4) localStorage.setItem('m-pin', p);
         location.reload();
     }
 
     const gunler = [
-        { id: 'mon', ad: 'PAZARTESİ', cls: 'pazartesi' }, { id: 'tue', ad: 'SALI', cls: 'sali' },
-        { id: 'wed', ad: 'ÇARŞAMBA', cls: 'carsamba' }, { id: 'thu', ad: 'PERŞEMBE', cls: 'persembe' },
-        { id: 'fri', ad: 'CUMA', cls: 'cuma' }, { id: 'sat', ad: 'CUMARTESİ', cls: 'cumartesi' },
-        { id: 'sun', ad: 'PAZAR', cls: 'pazar' }
+        { id: 'pzt', n: 'PAZARTESİ', c: 'mon' }, { id: 'sal', n: 'SALI', c: 'tue' },
+        { id: 'car', n: 'ÇARŞAMBA', c: 'wed' }, { id: 'per', n: 'PERŞEMBE', c: 'thu' },
+        { id: 'cum', n: 'CUMA', c: 'fri' }, { id: 'cmt', n: 'CUMARTESİ', c: 'sat' },
+        { id: 'paz', n: 'PAZAR', c: 'sun' }
     ];
 
-    const list = document.getElementById('days-list');
     gunler.forEach(g => {
-        list.innerHTML += `
-            <div class="day-container">
-                <div class="day-header" onclick="toggleDay('${g.id}')"><span>${g.ad}</span> <span>✦</span></div>
-                <div id="${g.id}" class="day-content ${g.cls}">
-                    <div class="mood-selector">
-                        <span class="mood-btn" onclick="setMood(this,'😊')">😊</span>
-                        <span class="mood-btn" onclick="setMood(this,'🌟')">🌟</span>
-                        <span class="mood-btn" onclick="setMood(this,'🌙')">🌙</span>
-                        <span class="mood-btn" onclick="setMood(this,'🍃')">🍃</span>
-                        <span class="mood-btn" onclick="setMood(this,'🔥')">🔥</span>
-                    </div>
-                    <textarea id="t-${g.id}" placeholder="Buraya ruhunu dök..."></textarea>
-                    <button class="save-btn" onclick="saveNote('${g.id}')">MÜHÜRLE VE KAYDET</button>
+        document.getElementById('days-list').innerHTML += `
+            <div class="day-box">
+                <div class="day-header" onclick="toggleD('${g.id}')"><span>${g.n}</span> <span>✦</span></div>
+                <div id="${g.id}" class="day-body ${g.c}">
+                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını buraya mühürle..."></textarea>
+                    <button class="save-btn" onclick="saveData('${g.id}')">BU GÜNÜ MÜHÜRLE</button>
                 </div>
             </div>`;
-        const saved = localStorage.getItem('n-'+g.id); if(saved) document.getElementById('t-'+g.id).value = saved;
+        const old = localStorage.getItem('diary-'+g.id);
+        if(old) document.getElementById('txt-'+g.id).value = old;
     });
 
-    function setMood(el, mood) {
-        el.parentElement.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active'); selectedMood = mood;
+    function toggleD(id) {
+        const el = document.getElementById(id); const is = el.style.display === 'block';
+        document.querySelectorAll('.day-body').forEach(b => b.style.display = 'none');
+        el.style.display = is ? 'none' : 'block';
     }
 
-    function toggleDay(id) {
-        const c = document.getElementById(id); const isOpen = c.style.display === 'block';
-        document.querySelectorAll('.day-content').forEach(d => d.style.display = 'none');
-        c.style.display = isOpen ? 'none' : 'block';
+    function saveData(id) {
+        const val = document.getElementById('txt-'+id).value;
+        localStorage.setItem('diary-'+id, val);
+        alert("Notun zaman tüneline mühürlendi.");
     }
 
-    function saveNote(id) {
-        const area = document.getElementById('t-'+id);
-        const log = `\n[${new Date().toLocaleString('tr-TR')} | Mod: ${selectedMood}]\n` + area.value;
-        localStorage.setItem('n-'+id, log); area.value = log;
-        alert("Notun zaman tüneline işlendi.");
-    }
-
-    // CANLI RİTİM SAATİ
-    setInterval(() => { 
-        document.getElementById('clock-login').innerText = new Date().toLocaleTimeString('tr-TR'); 
-    }, 1000);
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('tr-TR'); }, 1000);
 </script>
 </body>
 </html>
