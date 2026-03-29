@@ -19,3 +19,4 @@ Bu proje, kişisel notlarınızı güvenli ve görsel bir atmosferde saklamanız
 
 ---
 *Bu proje, kullanıcı deneyimi ve görsel estetiğin birleşimiyle oluşturulmuştur.*
+#konum 
