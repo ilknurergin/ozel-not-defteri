@@ -1,11 +1,11 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistik Ajanda</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'serif'; background: #000; color: white; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: serif; }
         
         /* GİRİŞ EKRANI */
         #login-screen { 
@@ -13,7 +13,7 @@
             background: url('0177b904c247bc8010066256a918128a.jpg') no-repeat center center; 
             background-size: cover; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; z-index: 1000; 
-            transition: 1s cubic-bezier(0.7, 0, 0.3, 1);
+            transition: 1s;
         }
 
         .fingerprint-btn { 
@@ -21,28 +21,27 @@
             background: url('834a9255f00a5f8afa18cc371ea69afc.jpg') no-repeat center center; 
             background-size: contain; border: none; cursor: pointer; 
             border-radius: 50%; box-shadow: 0 0 40px #00d4ff; 
-            animation: breathe 3s infinite ease-in-out; 
+            animation: breathe 3s infinite; 
         }
 
         @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         
-        #pin-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1100; backdrop-filter: blur(20px); }
-        .pin-display { font-size: 40px; color: #00d4ff; margin-bottom: 30px; letter-spacing: 15px; }
-        .pin-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; }
+        #pin-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1100; backdrop-filter: blur(15px); }
+        .pin-display { font-size: 40px; color: #00d4ff; margin-bottom: 20px; letter-spacing: 10px; }
+        .pin-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 15px; }
         .pin-btn { width: 80px; height: 80px; border-radius: 50%; border: 1px solid #333; background: rgba(255,255,255,0.05); color: white; font-size: 24px; cursor: pointer; }
 
-        /* ANA İÇERİK */
-        #app-content { display: none; padding: 0; background: #000; min-height: 100vh; }
-        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.85); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1a1a; }
+        /* ANA İÇERİK - VİDEODAKİ GİBİ HER GÜN AÇIK */
+        #app-content { display: none; padding: 0; background: #000; }
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #000; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1a1a; }
         
-        .day-box { width: 100%; border-bottom: 1px solid #111; }
+        .day-box { width: 100%; border-bottom: 2px solid #111; }
         .day-header { 
-            padding: 35px 20px; font-size: 24px; font-weight: bold; cursor: pointer;
-            text-shadow: 2px 2px 8px #000; background: rgba(255,255,255,0.05); 
-            display: flex; justify-content: space-between;
+            padding: 30px 20px; font-size: 26px; font-weight: bold;
+            text-shadow: 2px 2px 5px #000; background: rgba(0,0,0,0.4); 
         }
 
-        .day-body { display: none; padding: 20px; min-height: 550px; background-size: cover; background-position: center; transition: 0.4s; }
+        .day-body { padding: 20px; min-height: 550px; background-size: cover; background-position: center; display: block; }
         
         /* GÜN RESİMLERİ */
         .mon { background-image: url('2352ce77641b4da8769d51efff3eb20b.jpg'); }
@@ -54,18 +53,18 @@
         .sun { background-image: url('0177b904c247bc8010066256a918128a.jpg'); }
 
         textarea { 
-            width: 100%; height: 350px; background: rgba(0,0,0,0.85); color: #fff; 
-            border: 2px solid #00d4ff; border-radius: 15px; padding: 20px; 
+            width: 100%; height: 350px; background: rgba(0,0,0,0.8); color: #fff; 
+            border: 1px solid #00d4ff; border-radius: 10px; padding: 20px; 
             font-size: 18px; box-sizing: border-box; resize: none;
         }
 
         .save-btn { 
-            background: linear-gradient(135deg, #00d4ff 0%, #008fb3 100%); color: #000; 
-            border: none; padding: 18px; border-radius: 12px; width: 100%; 
-            font-weight: bold; font-size: 18px; margin-top: 15px; cursor: pointer;
+            background: #00d4ff; color: #000; border: none; padding: 18px; 
+            border-radius: 10px; width: 100%; font-weight: bold; 
+            font-size: 18px; margin-top: 15px; cursor: pointer;
         }
 
-        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; background: #111; padding: 30px; border-radius: 20px; display: none; z-index: 2000; border: 1px solid #00d4ff; }
+        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background: #111; padding: 20px; display: none; z-index: 2000; border: 1px solid #00d4ff; }
     </style>
 </head>
 <body>
@@ -73,13 +72,13 @@
 <div id="login-screen">
     <h1 id="login-title">MİSTİK AJANDA</h1>
     <button class="fingerprint-btn" onclick="showPin()"></button>
-    <p id="clock" style="margin-top:25px; font-family:monospace; font-size:22px; color:#00d4ff;"></p>
+    <p id="clock" style="margin-top:20px; font-family:monospace; font-size:22px; color:#00d4ff;"></p>
 </div>
 
 <div id="pin-overlay">
     <div class="pin-display" id="pin-dots">----</div>
     <div class="pin-grid" id="numpad"></div>
-    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none; cursor:pointer;">VAZGEÇ</button>
+    <button onclick="hidePin()" style="margin-top:20px; color: white; background:none; border:none; cursor:pointer;">İPTAL</button>
 </div>
 
 <div id="app-content">
@@ -91,9 +90,9 @@
 </div>
 
 <div id="settings-modal">
-    <h3 style="color:#00d4ff">⚙️ Ayarlar</h3>
-    <input type="text" id="set-title" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Ajanda Başlığı">
-    <input type="number" id="set-pin" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Yeni PIN">
+    <h3>⚙️ Ayarlar</h3>
+    <input type="text" id="set-title" style="width:100%; padding:10px; margin-bottom:10px;" placeholder="Başlık Değiştir">
+    <input type="number" id="set-pin" style="width:100%; padding:10px; margin-bottom:10px;" placeholder="Yeni PIN">
     <button onclick="saveSettings()" class="save-btn">GÜNCELLE</button>
 </div>
 
@@ -113,17 +112,17 @@
         for(let i=1; i<=9; i++) d.innerHTML += `<button class="pin-btn" onclick="add('${i}')">${i}</button>`;
         d.innerHTML += `<button class="pin-btn" onclick="inputPin=''">C</button>`;
         d.innerHTML += `<button class="pin-btn" onclick="add('0')">0</button>`;
-        d.innerHTML += `<button class="pin-btn" style="color:#00d4ff" onclick="confirm()">OK</button>`;
+        d.innerHTML += `<button class="pin-btn" onclick="confirm()">OK</button>`;
     }
 
     function add(n) { if(inputPin.length < 4) { inputPin += n; document.getElementById('pin-dots').innerText = "*".repeat(inputPin.length); } }
 
     function confirm() {
         if(inputPin === correctPin) {
-            document.getElementById('login-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
             hidePin();
-        } else { alert("Erişim Reddedildi!"); inputPin = ""; document.getElementById('pin-dots').innerText = "----"; }
+        } else { alert("Hatalı PIN!"); inputPin = ""; document.getElementById('pin-dots').innerText = "----"; }
     }
 
     function toggleSettings() { const s = document.getElementById('settings-modal'); s.style.display = (s.style.display === 'block') ? 'none' : 'block'; }
@@ -145,9 +144,9 @@
     gunler.forEach(g => {
         document.getElementById('days-list').innerHTML += `
             <div class="day-box">
-                <div class="day-header" onclick="toggleD('${g.id}')"><span>${g.n}</span> <span>✦</span></div>
+                <div class="day-header">${g.n}</div>
                 <div id="${g.id}" class="day-body ${g.c}">
-                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını buraya mühürle..."></textarea>
+                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını mühürle..."></textarea>
                     <button class="save-btn" onclick="saveData('${g.id}')">NOTU & KONUMU MÜHÜRLE</button>
                 </div>
             </div>`;
@@ -155,33 +154,26 @@
         if(old) document.getElementById('txt-'+g.id).value = old;
     });
 
-    function toggleD(id) {
-        const el = document.getElementById(id);
-        const currentDisplay = el.style.display;
-        document.querySelectorAll('.day-body').forEach(b => b.style.display = 'none');
-        el.style.display = (currentDisplay === 'block') ? 'none' : 'block';
-    }
-
     // --- AKILLI LOKASYON ---
-    function saveData(id) {
+    async function saveData(id) {
         const val = document.getElementById('txt-'+id).value;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
                     const data = await res.json();
-                    const city = data.address.city || data.address.town || "Gizli Bölge";
+                    const city = data.address.city || data.address.town || data.address.village || "Gizli Bölge";
                     const finalNote = val + `\n\n📍 ${city} | ⏰ ${new Date().toLocaleTimeString('tr-TR')}`;
                     localStorage.setItem('diary-'+id, finalNote);
                     document.getElementById('txt-'+id).value = finalNote;
-                    alert("Not ve konum ( " + city + " ) başarıyla mühürlendi! ✨");
+                    alert("Notun ve konumun ( " + city + " ) mühürlendi! ✨");
                 } catch (e) {
                     localStorage.setItem('diary-'+id, val);
-                    alert("Not mühürlendi (Konum alınamadı).");
+                    alert("Mühürlendi.");
                 }
             }, () => {
                 localStorage.setItem('diary-'+id, val);
-                alert("Not mühürlendi (Konum izni reddedildi).");
+                alert("Mühürlendi.");
             });
         }
     }
@@ -190,4 +182,3 @@
 </script>
 </body>
 </html>
-        
