@@ -3,46 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Güvenli Not Defteri</title>
+    <title>Mistik Ajanda</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
-        .btn { background: #333; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; }
-        #app { display: none; }
-        textarea { width: 100%; height: 150px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; padding: 10px; box-sizing: border-box; }
-        .info { margin-bottom: 15px; color: #666; font-size: 14px; }
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Georgia', serif;
+            background: #000; color: white;
+            overflow-x: hidden;
+        }
+
+        /* GİRİŞ EKRANI */
+        #login-screen {
+            position: fixed; width: 100%; height: 100%;
+            background: url('1000093933.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 1000; transition: 1s;
+        }
+
+        .fingerprint-btn {
+            width: 150px; height: 150px;
+            background: url('1000093911.jpg') no-repeat center center;
+            background-size: contain;
+            border: none; cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00d4ff;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px #00d4ff; }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px #00d4ff; }
+            100% { transform: scale(1); box-shadow: 0 0 20px #00d4ff; }
+        }
+
+        /* ANA İÇERİK */
+        #app-content {
+            display: none; padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center; margin-bottom: 30px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* KATMANLI GÜNLER (ACCORDION) */
+        .day-container { margin-bottom: 10px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+
+        .day-header {
+            padding: 20px; font-size: 22px; font-weight: bold;
+            cursor: pointer; text-align: left; background: rgba(0,0,0,0.6);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .day-content {
+            display: none; padding: 20px; min-height: 400px;
+            background-size: cover; background-position: center;
+            position: relative;
+        }
+
+        /* GÜN ARKA PLANLARI */
+        .pazartesi { background-image: url('1000093927.jpg'); }
+        .sali { background-image: url('1000093922.jpg'); }
+        .carsamba { background-image: url('1000093921.jpg'); }
+        .persembe { background-image: url('1000093920.jpg'); }
+        .cuma { background-image: url('1000093919.jpg'); }
+        .cumartesi { background-image: url('1000093918.jpg'); }
+        .pazar { background-image: url('1000093916.jpg'); }
+
+        textarea {
+            width: 100%; height: 250px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid white; color: white;
+            border-radius: 10px; padding: 15px;
+            font-size: 16px; outline: none; box-sizing: border-box;
+        }
+
+        .controls {
+            display: flex; gap: 10px; margin-bottom: 10px;
+        }
+
+        input[type="file"], input[type="time"] {
+            padding: 8px; border-radius: 5px; border: none;
+        }
+
+        .save-btn {
+            background: #27ae60; color: white; border: none;
+            padding: 10px 20px; border-radius: 5px; margin-top: 10px;
+            cursor: pointer; font-weight: bold; width: 100%;
+        }
     </style>
 </head>
 <body>
 
-<div class="card" id="login">
-    <h2>Kilitli Not Defteri</h2>
-    <p class="info">Lütfen giriş yapmak için dokunun.</p>
-    <button class="btn" onclick="giris()">Parmak İzi / Şifre İle Aç</button>
+<div id="login-screen">
+    <h1 style="margin-bottom: 50px; text-shadow: 2px 2px 10px #000;">GÜVENLİ ERİŞİM</h1>
+    <button class="fingerprint-btn" onclick="login()"></button>
+    <p style="margin-top: 20px;">LÜTFEN DOĞRULAMA YAPIN</p>
 </div>
 
-<div class="card" id="app">
-    <h3 id="tarih"></h3>
-    <input type="file" id="dosya" style="margin-bottom: 10px;">
-    <textarea placeholder="Notunuzu buraya yazın..."></textarea>
-    <button class="btn">Kaydet</button>
+<div id="app-content">
+    <div class="header">
+        <h2 id="clock"></h2>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('mon')">PAZARTESİ <span>+</span></div>
+        <div id="mon" class="day-content pazartesi">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Pazartesi kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('tue')">SALI <span>+</span></div>
+        <div id="tue" class="day-content sali">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Salı kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('wed')">ÇARŞAMBA <span>+</span></div>
+        <div id="wed" class="day-content carsamba">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Çarşamba kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('thu')">PERŞEMBE <span>+</span></div>
+        <div id="thu" class="day-content persembe">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Perşembe kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('fri')">CUMA <span>+</span></div>
+        <div id="fri" class="day-content cuma">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Cuma kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('sat')">CUMARTESİ <span>+</span></div>
+        <div id="sat" class="day-content cumartesi">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Cumartesi kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
+
+    <div class="day-container">
+        <div class="day-header" onclick="toggleDay('sun')">PAZAR <span>+</span></div>
+        <div id="sun" class="day-content pazar">
+            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
+            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
+            <button class="save-btn" onclick="alert('Pazar kaydedildi!')">KAYDET</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    document.getElementById('tarih').innerText = new Date().toLocaleString('tr-TR');
+    function login() {
+        document.getElementById('login-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+        }, 1000);
+    }
 
-    function giris() {
-        // Tarayıcı parmak izi penceresini tetikler (Destekleyen cihazlarda)
-        if (window.PublicKeyCredential) {
-            alert("Biyometrik doğrulama isteniyor...");
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
+    function toggleDay(id) {
+        const content = document.getElementById(id);
+        const allContents = document.querySelectorAll('.day-content');
+        
+        allContents.forEach(c => {
+            if(c.id !== id) c.style.display = 'none';
+        });
+
+        if (content.style.display === "block") {
+            content.style.display = "none";
         } else {
-            alert("Cihazınız biyometrik girişi desteklemiyor, standart giriş yapıldı.");
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
+            content.style.display = "block";
         }
     }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleString('tr-TR');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 </script>
 
 </body>
