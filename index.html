@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistik Ajanda</title>
+    <title>Mistik Ajanda - Akıllı Hafıza</title>
     <style>
         body, html {
             margin: 0; padding: 0; height: 100%;
@@ -49,7 +49,6 @@
             text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
         }
 
-        /* KATMANLI GÜNLER (ACCORDION) */
         .day-container { margin-bottom: 10px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
 
         .day-header {
@@ -61,7 +60,6 @@
         .day-content {
             display: none; padding: 20px; min-height: 400px;
             background-size: cover; background-position: center;
-            position: relative;
         }
 
         /* GÜN ARKA PLANLARI */
@@ -75,26 +73,23 @@
 
         textarea {
             width: 100%; height: 250px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid white; color: white;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3); color: white;
             border-radius: 10px; padding: 15px;
             font-size: 16px; outline: none; box-sizing: border-box;
-        }
-
-        .controls {
-            display: flex; gap: 10px; margin-bottom: 10px;
-        }
-
-        input[type="file"], input[type="time"] {
-            padding: 8px; border-radius: 5px; border: none;
+            resize: none;
         }
 
         .save-btn {
-            background: #27ae60; color: white; border: none;
-            padding: 10px 20px; border-radius: 5px; margin-top: 10px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white; border: none;
+            padding: 12px; border-radius: 8px; margin-top: 10px;
             cursor: pointer; font-weight: bold; width: 100%;
+            transition: 0.3s;
         }
+        
+        .save-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -110,97 +105,70 @@
         <h2 id="clock"></h2>
     </div>
 
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('mon')">PAZARTESİ <span>+</span></div>
-        <div id="mon" class="day-content pazartesi">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Pazartesi kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('tue')">SALI <span>+</span></div>
-        <div id="tue" class="day-content sali">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Salı kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('wed')">ÇARŞAMBA <span>+</span></div>
-        <div id="wed" class="day-content carsamba">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Çarşamba kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('thu')">PERŞEMBE <span>+</span></div>
-        <div id="thu" class="day-content persembe">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Perşembe kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('fri')">CUMA <span>+</span></div>
-        <div id="fri" class="day-content cuma">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Cuma kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('sat')">CUMARTESİ <span>+</span></div>
-        <div id="sat" class="day-content cumartesi">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Cumartesi kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
-
-    <div class="day-container">
-        <div class="day-header" onclick="toggleDay('sun')">PAZAR <span>+</span></div>
-        <div id="sun" class="day-content pazar">
-            <div class="controls"><input type="time" value="09:00"><input type="file"></div>
-            <textarea placeholder="Notlarınızı buraya bırakın..."></textarea>
-            <button class="save-btn" onclick="alert('Pazar kaydedildi!')">KAYDET</button>
-        </div>
-    </div>
+    <div id="days-list"></div>
 </div>
 
 <script>
+    const gunler = [
+        { id: 'mon', ad: 'PAZARTESİ', sinif: 'pazartesi' },
+        { id: 'tue', ad: 'SALI', sinif: 'sali' },
+        { id: 'wed', ad: 'ÇARŞAMBA', sinif: 'carsamba' },
+        { id: 'thu', ad: 'PERŞEMBE', sinif: 'persembe' },
+        { id: 'fri', ad: 'CUMA', sinif: 'cuma' },
+        { id: 'sat', ad: 'CUMARTESİ', sinif: 'cumartesi' },
+        { id: 'sun', ad: 'PAZAR', sinif: 'pazar' }
+    ];
+
+    // Sayfa yüklendiğinde günleri oluştur
+    const daysList = document.getElementById('days-list');
+    gunler.forEach(gun => {
+        daysList.innerHTML += `
+            <div class="day-container">
+                <div class="day-header" onclick="toggleDay('${gun.id}')">${gun.ad} <span>+</span></div>
+                <div id="${gun.id}" class="day-content ${gun.sinif}">
+                    <textarea id="text-${gun.id}" placeholder="Buraya notlarınızı yazın..."></textarea>
+                    <button class="save-btn" onclick="saveNote('${gun.id}')">NOTU TARİHLE VE KAYDET</button>
+                </div>
+            </div>
+        `;
+        // Kayıtlı veriyi geri yükle
+        setTimeout(() => {
+            const saved = localStorage.getItem('note-' + gun.id);
+            if(saved) document.getElementById('text-' + gun.id).value = saved;
+        }, 100);
+    });
+
     function login() {
         document.getElementById('login-screen').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
-        }, 1000);
+        }, 800);
     }
 
     function toggleDay(id) {
         const content = document.getElementById(id);
-        const allContents = document.querySelectorAll('.day-content');
-        
-        allContents.forEach(c => {
-            if(c.id !== id) c.style.display = 'none';
-        });
+        const isVisible = content.style.display === "block";
+        document.querySelectorAll('.day-content').forEach(c => c.style.display = 'none');
+        content.style.display = isVisible ? "none" : "block";
+    }
 
-        if (content.style.display === "block") {
-            content.style.display = "none";
-        } else {
-            content.style.display = "block";
+    function saveNote(id) {
+        const textArea = document.getElementById('text-' + id);
+        const simdi = new Date();
+        const tarihDamgasi = `\n--- [Kayıt: ${simdi.toLocaleString('tr-TR')}] ---\n`;
+        
+        // Eğer boş değilse tarih ekle ve kaydet
+        if(textArea.value.trim() !== "") {
+            const yeniNot = tarihDamgasi + textArea.value;
+            localStorage.setItem('note-' + id, yeniNot);
+            textArea.value = yeniNot;
+            alert('Notunuz tarihlenerek güvenle kaydedildi!');
         }
     }
 
     function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleString('tr-TR');
+        document.getElementById('clock').innerText = new Date().toLocaleString('tr-TR');
     }
     setInterval(updateClock, 1000);
     updateClock();
