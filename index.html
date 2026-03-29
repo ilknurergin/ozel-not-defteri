@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -38,7 +38,7 @@
         .day-box { width: 100%; border-bottom: 1px solid #111; }
         .day-header { 
             padding: 35px 20px; font-size: 24px; font-weight: bold; cursor: pointer;
-            text-shadow: 2px 2px 8px #000; background: rgba(0,0,0,0.3); 
+            text-shadow: 2px 2px 8px #000; background: rgba(255,255,255,0.05); 
             display: flex; justify-content: space-between;
         }
 
@@ -79,21 +79,21 @@
 <div id="pin-overlay">
     <div class="pin-display" id="pin-dots">----</div>
     <div class="pin-grid" id="numpad"></div>
-    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none;">VAZGEÇ</button>
+    <button onclick="hidePin()" style="margin-top:30px; color: #555; background:none; border:none; cursor:pointer;">VAZGEÇ</button>
 </div>
 
 <div id="app-content">
     <div class="header">
         <h2 id="app-title">Phantom Harmony</h2>
-        <button onclick="toggleSettings()" style="background:none; border:none; font-size:28px;">⚙️</button>
+        <button onclick="toggleSettings()" style="background:none; border:none; font-size:28px; cursor:pointer;">⚙️</button>
     </div>
     <div id="days-list"></div>
 </div>
 
 <div id="settings-modal">
     <h3 style="color:#00d4ff">⚙️ Ayarlar</h3>
-    <input type="text" id="set-title" style="width:100%; padding:10px; margin-bottom:10px;" placeholder="Yeni Başlık">
-    <input type="number" id="set-pin" style="width:100%; padding:10px; margin-bottom:10px;" placeholder="Yeni PIN">
+    <input type="text" id="set-title" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Ajanda Başlığı">
+    <input type="number" id="set-pin" style="width:100%; padding:12px; margin:10px 0; background:#000; color:white; border:1px solid #333;" placeholder="Yeni PIN">
     <button onclick="saveSettings()" class="save-btn">GÜNCELLE</button>
 </div>
 
@@ -147,42 +147,41 @@
             <div class="day-box">
                 <div class="day-header" onclick="toggleD('${g.id}')"><span>${g.n}</span> <span>✦</span></div>
                 <div id="${g.id}" class="day-body ${g.c}">
-                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını mühürle..."></textarea>
+                    <textarea id="txt-${g.id}" placeholder="Ruhunun notlarını buraya mühürle..."></textarea>
                     <button class="save-btn" onclick="saveData('${g.id}')">NOTU & KONUMU MÜHÜRLE</button>
                 </div>
             </div>`;
         const old = localStorage.getItem('diary-'+g.id);
-        if(old) document.getElementById('txt-${g.id}').value = old;
+        if(old) document.getElementById('txt-'+g.id).value = old;
     });
 
     function toggleD(id) {
         const el = document.getElementById(id);
+        const currentDisplay = el.style.display;
         document.querySelectorAll('.day-body').forEach(b => b.style.display = 'none');
-        el.style.display = 'block';
+        el.style.display = (currentDisplay === 'block') ? 'none' : 'block';
     }
 
-    // --- AKILLI LOKASYON FONKSİYONU ---
+    // --- AKILLI LOKASYON ---
     function saveData(id) {
         const val = document.getElementById('txt-'+id).value;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
                 try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
                     const data = await res.json();
-                    const city = data.address.city || data.address.town || data.address.village || "Gizli Bölge";
+                    const city = data.address.city || data.address.town || "Gizli Bölge";
                     const finalNote = val + `\n\n📍 ${city} | ⏰ ${new Date().toLocaleTimeString('tr-TR')}`;
                     localStorage.setItem('diary-'+id, finalNote);
                     document.getElementById('txt-'+id).value = finalNote;
-                    alert("Notun ve konumun ( " + city + " ) mühürlendi! ✨");
+                    alert("Not ve konum ( " + city + " ) başarıyla mühürlendi! ✨");
                 } catch (e) {
                     localStorage.setItem('diary-'+id, val);
                     alert("Not mühürlendi (Konum alınamadı).");
                 }
             }, () => {
                 localStorage.setItem('diary-'+id, val);
-                alert("Not mühürlendi (Konum izni verilmedi).");
+                alert("Not mühürlendi (Konum izni reddedildi).");
             });
         }
     }
@@ -191,3 +190,4 @@
 </script>
 </body>
 </html>
+        
