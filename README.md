@@ -1,19 +1,21 @@
-# 🔐 Güvenli Dijital Not Defteri
+# 🌌 Mistik Dijital Ajanda
 
-Bu proje, kullanıcıların kişisel notlarını, resimlerini ve belgelerini güvenli bir şekilde saklayabilmesi için tasarlanmış modern bir web günlüğüdür.
+Bu proje, kişisel notlarınızı güvenli ve görsel bir atmosferde saklamanız için tasarlanmış, **özel mühürlü** bir dijital günlüktür.
 
-## ✨ Özellikler
-* **Biyometrik Giriş:** Cihazın parmak izi veya yüz tanıma sistemiyle güvenli erişim (Simüle edilmiş WebAuthn yapısı).
-* **Medya Desteği:** Notlara fotoğraf ve belge ekleme imkanı.
-* **Zaman Damgası:** Her not için otomatik tarih ve saat kaydı.
-* **Mobil Uyumluluk:** Tamamen responsive (duyarlı) tasarım ile telefondan kolay kullanım.
+## ✨ Öne Çıkan Özellikler
 
-## 🛠️ Kullanılan Teknolojiler
-* HTML5
-* CSS3 (Modern UI/UX)
-* JavaScript (Biyometrik doğrulama mantığı)
+* **🔒 Biyometrik Giriş Deneyimi:** Parlayan parmak izi butonuyla tetiklenen görsel kilit sistemi.
+* **🔢 PIN Koruma:** 4 haneli kişiselleştirilebilir erişim kodu.
+* **📅 Haftalık Katmanlı Yapı:** Her gün için farklı bir mistik manzara ve geniş not alanı.
+* **🧠 Akıllı Hafıza:** Notlarınız tarayıcı hafızasında güvenle saklanır, asla kaybolmaz.
+* **🕒 Zaman Damgası:** Her not, kaydedildiği anın tarihi ve seçilen "Mood" (mod) ile mühürlenir.
+* **⚙️ Kişiselleştirme:** Defterin adını ve giriş şifresini uygulama içinden kolayca değiştirme.
 
-## 🚀 Nasıl Kullanılır?
-1. Uygulamayı açın.
-2. "Parmak İzi İle Giriş Yap" butonuna tıklayarak doğrulamayı geçin.
-3. Notunuzu yazın, dosyanızı seçin ve kaydedin.
+## 🛠️ Kurulum
+
+1.  Görselleri ana dizine yükleyin.
+2.  `index.html` dosyasını tarayıcınızda açın veya GitHub Pages üzerinden yayınlayın.
+3.  Varsayılan PIN: `1234`
+
+---
+*Bu proje, kullanıcı deneyimi ve görsel estetiğin birleşimiyle oluşturulmuştur.*
