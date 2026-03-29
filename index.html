@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistik Ajanda - Akıllı Hafıza</title>
+    <title>Mistik Ajanda - PIN Korumalı</title>
     <style>
         body, html {
             margin: 0; padding: 0; height: 100%;
             font-family: 'Georgia', serif;
             background: #000; color: white;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* GİRİŞ EKRANI */
@@ -19,15 +19,14 @@
             background-size: cover;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            z-index: 1000; transition: 1s;
+            z-index: 1000; transition: 0.8s;
         }
 
         .fingerprint-btn {
-            width: 150px; height: 150px;
+            width: 140px; height: 140px;
             background: url('1000093911.jpg') no-repeat center center;
             background-size: contain;
-            border: none; cursor: pointer;
-            border-radius: 50%;
+            border: none; cursor: pointer; border-radius: 50%;
             box-shadow: 0 0 20px #00d4ff;
             animation: pulse 2s infinite;
         }
@@ -38,31 +37,52 @@
             100% { transform: scale(1); box-shadow: 0 0 20px #00d4ff; }
         }
 
+        /* PIN PANELİ */
+        #pin-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 1100; backdrop-filter: blur(10px);
+        }
+
+        .pin-display {
+            font-size: 40px; letter-spacing: 15px; margin-bottom: 30px;
+            height: 50px; color: #00d4ff; text-shadow: 0 0 10px #00d4ff;
+        }
+
+        .pin-grid {
+            display: grid; grid-template-columns: repeat(3, 80px); gap: 15px;
+        }
+
+        .pin-btn {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1); color: white;
+            font-size: 24px; cursor: pointer; transition: 0.2s;
+        }
+
+        .pin-btn:active { background: #00d4ff; color: black; }
+
         /* ANA İÇERİK */
         #app-content {
-            display: none; padding: 20px;
-            min-height: 100vh;
+            display: none; padding: 20px; height: 100vh; overflow-y: auto;
         }
 
-        .header {
-            text-align: center; margin-bottom: 30px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-        }
-
+        .header { text-align: center; margin-bottom: 20px; }
         .day-container { margin-bottom: 10px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
-
         .day-header {
-            padding: 20px; font-size: 22px; font-weight: bold;
-            cursor: pointer; text-align: left; background: rgba(0,0,0,0.6);
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px; font-size: 20px; font-weight: bold;
+            cursor: pointer; background: rgba(0,0,0,0.7);
+            display: flex; justify-content: space-between;
         }
 
         .day-content {
-            display: none; padding: 20px; min-height: 400px;
+            display: none; padding: 20px; min-height: 450px;
             background-size: cover; background-position: center;
         }
 
-        /* GÜN ARKA PLANLARI */
+        /* GÜN RESİMLERİ */
         .pazartesi { background-image: url('1000093927.jpg'); }
         .sali { background-image: url('1000093922.jpg'); }
         .carsamba { background-image: url('1000093921.jpg'); }
@@ -72,43 +92,91 @@
         .pazar { background-image: url('1000093916.jpg'); }
 
         textarea {
-            width: 100%; height: 250px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
+            width: 100%; height: 280px;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3); color: white;
-            border-radius: 10px; padding: 15px;
-            font-size: 16px; outline: none; box-sizing: border-box;
-            resize: none;
+            border-radius: 10px; padding: 15px; font-size: 16px;
+            resize: none; box-sizing: border-box;
         }
 
         .save-btn {
             background: linear-gradient(45deg, #27ae60, #2ecc71);
-            color: white; border: none;
-            padding: 12px; border-radius: 8px; margin-top: 10px;
-            cursor: pointer; font-weight: bold; width: 100%;
-            transition: 0.3s;
+            color: white; border: none; padding: 12px;
+            border-radius: 8px; margin-top: 10px; width: 100%;
+            font-weight: bold; cursor: pointer;
         }
-        
-        .save-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <h1 style="margin-bottom: 50px; text-shadow: 2px 2px 10px #000;">GÜVENLİ ERİŞİM</h1>
-    <button class="fingerprint-btn" onclick="login()"></button>
-    <p style="margin-top: 20px;">LÜTFEN DOĞRULAMA YAPIN</p>
+    <h2 style="margin-bottom: 40px; text-shadow: 2px 2px 10px #000;">GÜVENLİ ERİŞİM</h2>
+    <button class="fingerprint-btn" onclick="showPinPad()"></button>
+    <p style="margin-top: 20px; opacity: 0.7;">PARMAK İZİ SİSTEMİ AKTİF</p>
+</div>
+
+<div id="pin-overlay">
+    <div class="pin-display" id="pin-dots">****</div>
+    <div class="pin-grid" id="numpad">
+        </div>
+    <button onclick="hidePinPad()" style="margin-top: 20px; background: none; border: none; color: gray; cursor: pointer;">İptal</button>
 </div>
 
 <div id="app-content">
     <div class="header">
         <h2 id="clock"></h2>
     </div>
-
     <div id="days-list"></div>
 </div>
 
 <script>
+    const DOGRU_PIN = "1234"; // Şifreni buradan değiştirebilirsin
+    let girilenPin = "";
+
+    function showPinPad() {
+        document.getElementById('pin-overlay').style.display = 'flex';
+        renderNumPad();
+    }
+
+    function hidePinPad() {
+        document.getElementById('pin-overlay').style.display = 'none';
+        girilenPin = "";
+        document.getElementById('pin-dots').innerText = "****";
+    }
+
+    function renderNumPad() {
+        const pad = document.getElementById('numpad');
+        pad.innerHTML = "";
+        for (let i = 1; i <= 9; i++) {
+            pad.innerHTML += `<button class="pin-btn" onclick="pressKey('${i}')">${i}</button>`;
+        }
+        pad.innerHTML += `<button class="pin-btn" onclick="girilenPin=''">C</button>`;
+        pad.innerHTML += `<button class="pin-btn" onclick="pressKey('0')">0</button>`;
+        pad.innerHTML += `<button class="pin-btn" onclick="checkPin()">OK</button>`;
+    }
+
+    function pressKey(key) {
+        if(girilenPin.length < 4) {
+            girilenPin += key;
+            document.getElementById('pin-dots').innerText = "*".repeat(girilenPin.length) + "-".repeat(4 - girilenPin.length);
+        }
+    }
+
+    function checkPin() {
+        if(girilenPin === DOGRU_PIN) {
+            document.getElementById('pin-overlay').style.display = 'none';
+            document.getElementById('login-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+            }, 600);
+        } else {
+            alert("Hatalı PIN!");
+            girilenPin = "";
+            document.getElementById('pin-dots').innerText = "****";
+        }
+    }
+
     const gunler = [
         { id: 'mon', ad: 'PAZARTESİ', sinif: 'pazartesi' },
         { id: 'tue', ad: 'SALI', sinif: 'sali' },
@@ -119,59 +187,45 @@
         { id: 'sun', ad: 'PAZAR', sinif: 'pazar' }
     ];
 
-    // Sayfa yüklendiğinde günleri oluştur
     const daysList = document.getElementById('days-list');
     gunler.forEach(gun => {
         daysList.innerHTML += `
             <div class="day-container">
-                <div class="day-header" onclick="toggleDay('${gun.id}')">${gun.ad} <span>+</span></div>
+                <div class="day-header" onclick="toggleDay('${gun.id}')">${gun.ad} <span>▼</span></div>
                 <div id="${gun.id}" class="day-content ${gun.sinif}">
-                    <textarea id="text-${gun.id}" placeholder="Buraya notlarınızı yazın..."></textarea>
-                    <button class="save-btn" onclick="saveNote('${gun.id}')">NOTU TARİHLE VE KAYDET</button>
+                    <textarea id="text-${gun.id}" placeholder="Bugünün notlarını buraya yazın..."></textarea>
+                    <button class="save-btn" onclick="saveNote('${gun.id}')">TARİHLE VE KAYDET</button>
                 </div>
             </div>
         `;
-        // Kayıtlı veriyi geri yükle
         setTimeout(() => {
             const saved = localStorage.getItem('note-' + gun.id);
             if(saved) document.getElementById('text-' + gun.id).value = saved;
         }, 100);
     });
 
-    function login() {
-        document.getElementById('login-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-        }, 800);
-    }
-
     function toggleDay(id) {
         const content = document.getElementById(id);
-        const isVisible = content.style.display === "block";
+        const current = content.style.display;
         document.querySelectorAll('.day-content').forEach(c => c.style.display = 'none');
-        content.style.display = isVisible ? "none" : "block";
+        content.style.display = (current === "block") ? "none" : "block";
     }
 
     function saveNote(id) {
-        const textArea = document.getElementById('text-' + id);
+        const area = document.getElementById('text-' + id);
         const simdi = new Date();
-        const tarihDamgasi = `\n--- [Kayıt: ${simdi.toLocaleString('tr-TR')}] ---\n`;
-        
-        // Eğer boş değilse tarih ekle ve kaydet
-        if(textArea.value.trim() !== "") {
-            const yeniNot = tarihDamgasi + textArea.value;
-            localStorage.setItem('note-' + id, yeniNot);
-            textArea.value = yeniNot;
-            alert('Notunuz tarihlenerek güvenle kaydedildi!');
+        const damga = `\n--- [Kayıt: ${simdi.toLocaleString('tr-TR')}] ---\n`;
+        if(area.value.trim() !== "") {
+            const yeniContent = damga + area.value;
+            localStorage.setItem('note-' + id, yeniContent);
+            area.value = yeniContent;
+            alert('Notunuz tarihlendi ve hafızaya alındı.');
         }
     }
 
-    function updateClock() {
+    setInterval(() => {
         document.getElementById('clock').innerText = new Date().toLocaleString('tr-TR');
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+    }, 1000);
 </script>
 
 </body>
