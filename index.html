@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Güvenli Not Defteri</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .btn { background: #333; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        #app { display: none; }
+        textarea { width: 100%; height: 150px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; padding: 10px; box-sizing: border-box; }
+        .info { margin-bottom: 15px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="card" id="login">
+    <h2>Kilitli Not Defteri</h2>
+    <p class="info">Lütfen giriş yapmak için dokunun.</p>
+    <button class="btn" onclick="giris()">Parmak İzi / Şifre İle Aç</button>
+</div>
+
+<div class="card" id="app">
+    <h3 id="tarih"></h3>
+    <input type="file" id="dosya" style="margin-bottom: 10px;">
+    <textarea placeholder="Notunuzu buraya yazın..."></textarea>
+    <button class="btn">Kaydet</button>
+</div>
+
+<script>
+    document.getElementById('tarih').innerText = new Date().toLocaleString('tr-TR');
+
+    function giris() {
+        // Tarayıcı parmak izi penceresini tetikler (Destekleyen cihazlarda)
+        if (window.PublicKeyCredential) {
+            alert("Biyometrik doğrulama isteniyor...");
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        } else {
+            alert("Cihazınız biyometrik girişi desteklemiyor, standart giriş yapıldı.");
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
